@@ -1,0 +1,52 @@
+class Board
+
+types
+instance variables
+	private matrix: seq of seq of nat;
+	 
+	 
+operations
+
+	-- Empty spot: 0
+	-- Spot with piece player1: 1
+	-- No wall: 2
+	-- Yes wall: 3 
+	-- Null space: 4
+	-- Spot with piece player2: 5
+	-- matrix(row)(col)
+	public Board: () ==> Board
+	  	Board () == (
+	  	matrix := 
+	    [
+	    [0,2,0,2,0,2,0,2,1,2,0,2,0,2,0,2,0],
+	    [2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	    [0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	    [2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	  	[0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	  	[2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	  	[0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	  	[2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	  	[0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	  	[2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	  	[0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	  	[2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	  	[0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	  	[2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	  	[0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	  	[2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	  	[0,2,0,2,0,2,0,2,5,2,0,2,0,2,0,2,0]
+	  	];
+	  	);
+	  	
+	  	public placeWall: seq of nat * String ==> ()  
+	  		placeWall(coords, orientation) == (
+	  		-- TODO check
+	  		)
+	  		pre coords(1) - 2 >0 and coords(2) - 2 > 0 and coords(1) + 2 <= 17 and coords(2) + 2 <=17
+	  		-- weakest precondition on bounds 
+	  	
+	  	public getMatrix: () ==> seq of seq of nat
+	  		getMatrix() == (
+	  		return matrix;
+	  		)
+end Board

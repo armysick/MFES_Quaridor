@@ -1,0 +1,12 @@
+class Board
+
+types
+instance variables
+	private matrix: seq of seq of nat;
+	 
+operations 
+	public Board: () ==> Board
+	  	Board () == (
+	  	matrix := [[1,1], [2,2]];
+	  	);
+end Board
