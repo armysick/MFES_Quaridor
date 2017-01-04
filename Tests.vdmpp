@@ -55,8 +55,10 @@ public testBadMatrix : () ==> ()
 	
 	public testAll: () ==> ()
   testAll() == (
- 	  --invalidDirectionMoving();
-  	--testBadMatrix();
+ 	  invalidDirectionMoving();
+  	testBadMatrix();
+  	-- Tests that intentionally break;
+  	
   	validMovement();
   	testGoodMatrix();
   );
