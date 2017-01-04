@@ -1,0 +1,46 @@
+-- https://github.com/joaofpereira/feup-mfes/tree/master/mastermind
+class Player -- represents the player of the game
+
+types
+	public String = seq of char;
+	
+instance variables
+	private name : String := [];
+	private numberofwallsonstack : nat;
+
+operations
+  
+  public Player : () ==> Player
+  	Player () == (
+  	name := "NotSpecified";
+  	numberofwallsonstack := 10;
+  	return self
+  	);
+  	
+  -- constructor of the player class with a string parameter
+  public Player : String ==> Player
+  	Player (playerName) == (
+  		name := playerName;
+  		numberofwallsonstack := 10;
+  		return self
+  	)
+  pre len playerName > 0;
+  
+  -- returns the player's name
+  public GetName : () ==> String
+  	GetName () == (
+  		return name;
+  	);
+  
+  public GetNumberOfWallsOnStack : () ==> nat
+  	GetNumberOfWallsOnStack () == (
+  	return numberofwallsonstack;
+  	);
+  	
+  -- adds a number of moves to the player's current number of moves 
+  public RemoveFromStack : () ==> ()
+  	RemoveFromStack () == (
+  		numberofwallsonstack := numberofwallsonstack-1;
+  	);
+		
+end Player

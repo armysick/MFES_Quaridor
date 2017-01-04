@@ -40,7 +40,7 @@ operations
 	  	[0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
 	  	[2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
 	  	[0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
-	  	[2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	  	[2,2,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
 	  	[0,2,0,2,0,2,0,2,5,2,0,2,0,2,0,2,0]
 	  	];
 	  	
@@ -150,7 +150,7 @@ operations
 	  		pre (direction = "N" or direction = "O" or direction= "S" or direction = "E") -- North, Oeste, etc
 	  		and checkPlayerOOB(direction,nrjogador) -- Jogador não sai do tabuleiro
 	  		and (nrjogador = 1 or nrjogador = 2) --Identificador válido de jogador
-	  		;-- TODO post testPathExistance(); 
+	  		post testPathExistance(); 
 	  		 
 	  		
 	  		pure public checkPlayerOOB: String * nat ==> bool

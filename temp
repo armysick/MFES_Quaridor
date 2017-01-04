@@ -1,0 +1,192 @@
+public String[][] initrandmatrix(int dimension, int nrdragons) {
+
+		String[][] mat = new String[dimension][dimension];
+		for (String[] row : mat)
+			Arrays.fill(row, "X");
+		Random randomGenerator = new Random();
+		int randomize_guide_cell = 99999;
+		for (int b = 0; b < dimension; b++) {
+			for (int a = 0; a < dimension; a++) {
+				if (a % 2 != 0 && b % 2 != 0) {
+					mat[b][a] = " ";
+				}
+			}
+		}
+		int[] coords = { 0, 0 };
+		int righ, dow;
+		int which_position = -1; // knowing in which of the 4 positions did the
+									// guide_cell got placed
+		dow = randomGenerator.nextInt(2);
+		if (dow == 1) {
+			int lef = randomGenerator.nextInt(2);
+			if (lef == 1) {
+				coords[0] = randomGenerator.nextInt((dimension - 1) / 2);
+				coords[1] = 0;
+				which_position = 0;
+			}
+			if (lef == 0) {
+				coords[0] = randomGenerator.nextInt((dimension - 1) / 2);
+				coords[1] = ((dimension - 1) / 2) - 1;
+				which_position = 1;
+			}
+		} else if (dow == 0) {
+			int uup = randomGenerator.nextInt(2);
+			if (uup == 0) {
+				coords[0] = ((dimension - 1) / 2) - 1;
+				coords[1] = randomGenerator.nextInt((dimension - 1) / 2);
+				which_position = 2;
+			}
+			if (uup == 1) {
+				coords[0] = 0;
+				coords[1] = randomGenerator.nextInt((dimension - 1) / 2);
+				which_position = 3;
+			}
+		}
+
+		String[][] visitedCells = new String[(dimension - 1) / 2][(dimension - 1) / 2];
+		for (String[] linha : visitedCells) {
+			Arrays.fill(linha, ".");
+		}
+		/*
+		 * print visited_cells if needed for (int i = 0; i <
+		 * visitedCells.length; i++) { for (int j = 0; j <
+		 * visitedCells[i].length; j++) { System.out.print(visitedCells[i][j] +
+		 * " "); } System.out.print("\n"); }
+		 */
+		visitedCells[coords[0]][coords[1]] = "+";
+		// print visited_cells if needed
+
+		if (which_position == 0) {
+			mat[coords[0] * 2 + 1][0] = "S";
+		} else if (which_position == 1) {
+			mat[coords[0] * 2 + 1][coords[1] * 2 + 2] = "S";
+		} else if (which_position == 2) {
+			mat[coords[0] * 2 + 1 + 1][coords[1] * 2 + 1] = "S";
+		} else if (which_position == 3) {
+			mat[0][coords[1] * 2 + 1] = "S";
+		}
+
+		int row, col, rowH, colH, rowD, colD, rowE, colE;
+
+		int[] coords_vis_cells = { coords[0], coords[1] }; // coordinates
+															// of guide
+															// cell on
+															// visited_cells;
+		Stack pathHist = new Stack();
+		pathHist.push(coords_vis_cells.clone());
+
+		int right = 0, left = 1, up = 2, down = 3, randomize = -1;
+
+		while (!pathHist.empty()) {
+
+			while (ok_go_up(visitedCells, coords_vis_cells)
+					|| ok_go_down(visitedCells, coords_vis_cells,
+							(dimension - 1) / 2)
+					|| ok_go_left(visitedCells, coords_vis_cells)
+					|| ok_go_right(visitedCells, coords_vis_cells,
+							(dimension - 1) / 2)) {
+				randomize = randomGenerator.nextInt(4); // randomize next
+														// direction to
+														// test/go_to
+				if (randomize == right) {
+					if (ok_go_right(visitedCells, coords_vis_cells,
+							(dimension - 1) / 2)) {
+						mat[(coords_vis_cells[0]) * 2 + 1][(coords_vis_cells[1]) * 2 + 2] = " ";
+						visitedCells[coords_vis_cells[0]][coords_vis_cells[1] + 1] = "+";
+						coords_vis_cells[1] = coords_vis_cells[1] + 1;
+					}
+				} else if (randomize == left) {
+					if (ok_go_left(visitedCells, coords_vis_cells)) {
+						mat[(coords_vis_cells[0]) * 2 + 1][(coords_vis_cells[1]) * 2] = " ";
+						visitedCells[coords_vis_cells[0]][coords_vis_cells[1] - 1] = "+";
+						coords_vis_cells[1] = coords_vis_cells[1] - 1;
+					}
+				} else if (randomize == up) {
+					if (ok_go_up(visitedCells, coords_vis_cells)) {
+						mat[(coords_vis_cells[0]) * 2][(coords_vis_cells[1]) * 2 + 1] = " ";
+						visitedCells[coords_vis_cells[0] - 1][coords_vis_cells[1]] = "+";
+						coords_vis_cells[0] = coords_vis_cells[0] - 1;
+					}
+				} else if (randomize == down) {
+					if (ok_go_down(visitedCells, coords_vis_cells,
+							(dimension - 1) / 2)) {
+						mat[(coords_vis_cells[0]) * 2 + 2][(coords_vis_cells[1]) * 2 + 1] = " ";
+						visitedCells[coords_vis_cells[0] + 1][coords_vis_cells[1]] = "+";
+						coords_vis_cells[0] = coords_vis_cells[0] + 1;
+					}
+				}
+				pathHist.push(coords_vis_cells.clone());
+			}
+			boolean previous_found = false; // previous guide cell on the stack
+											// that has
+			// directions on backtracking
+			while (previous_found == false && !pathHist.empty()) {
+				int[] previous = (int[]) pathHist.pop();
+				coords_vis_cells = previous;
+				previous_found = (ok_go_right(visitedCells, previous,
+						(dimension - 1) / 2)
+						|| ok_go_left(visitedCells, previous)
+						|| ok_go_up(visitedCells, previous) || ok_go_down(
+						visitedCells, previous, (dimension - 1) / 2));
+			}
+		}
+		rowH = randomGenerator.nextInt(dimension - 2) + 1; // all non border
+															// possible rows for
+															// hero;
+		colH = randomGenerator.nextInt(dimension - 2) + 1; // all non border
+															// possible cols for
+															// hero;
+
+		mat[rowH][colH] = "H"; // Set hero position
+		int[] hero_pos = { rowH, colH };
+		Hero hero = new Hero(hero_pos[0], hero_pos[1]);
+
+		rowD = rowH;
+		colD = rowH;
+
+		ArrayList<Integer> occupiedrows = new ArrayList<Integer>();
+		ArrayList<Integer> occupiedcols = new ArrayList<Integer>();
+
+		occupiedrows.add(rowH);
+		occupiedcols.add(colH);
+
+		for (int i = 0; i < nrdragons; i++) {
+			rowD = rowH;
+			colD = rowH;
+			while (alreadyOcuppied(rowD, colD, occupiedrows, occupiedcols)) {
+				rowD = randomGenerator.nextInt(dimension - 2) + 1; // all non
+																	// border
+				// possible rows for
+				// Drake;
+				colD = randomGenerator.nextInt(dimension - 2) + 1; // all non
+																	// border
+																	// possible
+																	// cols
+																	// for
+																	// drake;
+			}
+			mat[rowD][colD] = "D"; // Set drake position
+			occupiedrows.add(rowD);
+			occupiedcols.add(colD);
+			// int[] drk_pos = {rowD, colD};
+		}
+		// Dragon drk = new Dragon(drk_pos[0], drk_pos[1]);
+
+		rowE = rowH;
+		colE = rowH;
+		while (alreadyOcuppied(rowE, colE, occupiedrows, occupiedcols)) {
+			rowE = randomGenerator.nextInt(dimension - 2) + 1; // all non border
+			// possible rows for
+			// sword;
+			colE = randomGenerator.nextInt(dimension - 2) + 1; // all non border
+																// possible cols
+																// for
+																// sword;
+		}
+		occupiedrows.add(rowE);
+		occupiedcols.add(colE); // in case anything else needs to be added in
+								// the future
+		mat[rowE][colE] = "E"; // Set sword position
+
+		return mat;
+	}
