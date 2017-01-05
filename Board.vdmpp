@@ -314,6 +314,19 @@ operations
 		  		return true;
 	  			);
 	  		 
+	  		 
+	  	public checkGameOver: () ==> nat
+	  		checkGameOver() == (
+	  			if(piece1coords(1) = 17)
+	  			then
+	  				return 1  -- player1 Wins
+	  			elseif(piece2coords(1) = 0)
+	  			then
+	  				return 2  -- player2 Wins
+	  			else
+	  				return 3  -- ongoing Game
+	  		);
+	  		
 	  	public getMatrix: () ==> seq of seq of nat
 	  		getMatrix() == (
 	  		return matrix;

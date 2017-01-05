@@ -1,15 +1,83 @@
 class Game
 types
--- TODO Define types here
+public String = seq of char;
+
 values
 -- TODO Define values here
 instance variables
 	private player1: Player;
 	private player2: Player;
 	private board: Board;
+	private p1turn: bool;
+	private gameState: nat; -- 1: p1wins; 2: p2wins; 3: ongoing game;
 
 operations
 -- TODO Define operations here
+
+-- Construct
+public Game: Player * Player ==> Game
+	Game(p1, p2) == (
+		player1:=p1;
+		player2:=p2;
+		board := new Board();
+		p1turn := true;
+		gameState := 3; 
+	);
+	
+	
+	public movePiece: String ==> ()
+		movePiece(direction) == (
+		if p1turn
+		then
+			board.movePiece(direction,1)
+		else
+			board.movePiece(direction,2);
+		p1turn := not p1turn;
+		checkGameState();
+		)
+		pre gameState = 3;
+	
+	public placeWall: seq of nat * seq of nat ==> ()
+		placeWall(coords1, coords2) == (
+			if p1turn
+			then
+				player1.RemoveFromStack()
+			else
+				player2.RemoveFromStack();
+				
+			board.placeWall(coords1, coords2);
+			p1turn := not p1turn;
+		)
+		pre hasWallsToUse() and gameState = 3;
+		
+		
+		pure public hasWallsToUse : () ==> bool
+			hasWallsToUse() == (
+				if p1turn
+				then
+					if player1.GetNumberOfWallsOnStack() > 0
+					then(
+						return true;
+					)
+				else
+					if player2.GetNumberOfWallsOnStack() > 0
+					then
+						return true;
+				return false;
+			);
+		
+		public checkGameState : () ==> ()
+			checkGameState()==(
+				gameState := board.checkGameOver();
+			);
+			
+			
+		public getGameState : () ==> nat
+				getGameState() == (
+					return gameState;
+				);
+	
+
 functions
 -- TODO Define functiones here
 traces

@@ -32,7 +32,7 @@ operations
   		return name;
   	);
   
-  public GetNumberOfWallsOnStack : () ==> nat
+  pure public GetNumberOfWallsOnStack : () ==> nat
   	GetNumberOfWallsOnStack () == (
   	return numberofwallsonstack;
   	);

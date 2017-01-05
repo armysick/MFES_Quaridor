@@ -6,7 +6,6 @@ values
 instance variables
 -- TODO Define instance variables here
 operations
--- TODO Define operations here
 public testBadMatrix : () ==> ()
 	testBadMatrix() == (
 		dcl mat : seq of seq of nat := 
