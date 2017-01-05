@@ -90,6 +90,7 @@ public testBadMatrix : () ==> ()
   	testBadMatrix();
   	invalidPieceMovementAfterGameEnd();
   	emptyWallStack();
+  	invalidWallPlacement();
   	-- Tests that intentionally break;
   	
   	removeFromStack();
