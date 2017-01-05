@@ -74,7 +74,7 @@ operations
 	  		pre coords1(1)>0 and coords1(2)> 0 and coords1(1)<= 17 and coords1(2)<=17
 	  		and coords2(1)>0 and coords2(2)> 0 and coords2(1)<= 17 and coords2(2)<=17
 	  		-- weakest precondition on bounds 
-	  		and testValidWall(coords1, coords2) -- Tem que passar por um 4
+	  		--and testValidWall(coords1, coords2) -- Tem que passar por um 4
 	  		and (
 	  		(coords1(1) = coords2(1) and abs(coords1(2) - coords2(2)) = 2)
 	  		or

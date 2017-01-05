@@ -1,4 +1,4 @@
-class Board
+class oldBoard
 
 types
 	public String = seq of char;
@@ -10,7 +10,7 @@ instance variables
 	private stck: Stack;
 	private path1: bool;
 	private path2: bool;
-	private ignore: bool;	 
+	 
 	 
 	 
 	 inv exists1 line in seq matrix & exists1 elem in seq line & elem = 1; -- Only one "1" player1 piece
@@ -25,8 +25,8 @@ operations
 	-- Null space: 4
 	-- Spot with piece player2: 5
 	-- matrix(row)(col)
-	public Board: () ==> Board
-	  	Board () == (
+	public oldBoard: () ==> oldBoard
+	  	oldBoard () == (
 	  	matrix := 
 	    [
 	    [0,2,0,2,0,2,0,3,1,2,0,2,0,2,0,2,0],
@@ -52,8 +52,8 @@ operations
 	  	piece2coords := [17,9];
 	  	);
 	  	
-	  	public Board: seq of seq of nat ==> Board
-	  	Board (mateste) == (
+	  	public oldBoard: seq of seq of nat ==> oldBoard
+	  	oldBoard (mateste) == (
 	  	matrix := mateste;
 	  	
 	  	piece1coords := [1,9];
@@ -66,15 +66,14 @@ operations
 	  		matrix(coords2(1))(coords2(2)) := 3; 
 	  		path1:=false;
 	  		stck := new Stack(10000);
-	  		ignore := testPathExistance1(piece1coords);
+	  		testPathExistance1(piece1coords);
 	  		path2:=false;
 	  		stck := new Stack(10000);
-	  		ignore := testPathExistance2(piece2coords);
+	  		testPathExistance2(piece2coords);
 	  		)
 	  		pre coords1(1)>0 and coords1(2)> 0 and coords1(1)<= 17 and coords1(2)<=17
 	  		and coords2(1)>0 and coords2(2)> 0 and coords2(1)<= 17 and coords2(2)<=17
-	  		-- weakest precondition on bounds 
-	  		and testValidWall(coords1, coords2) -- Tem que passar por um 4
+	  		-- weakest precondition on bounds TODO: Tem que passar por um 4.
 	  		and (
 	  		(coords1(1) = coords2(1) and abs(coords1(2) - coords2(2)) = 2)
 	  		or
@@ -88,50 +87,11 @@ operations
 	  		post path1 and path2;
 	  		
 	  	
-	  	pure public testValidWall: seq of nat * seq of nat ==> bool
-	  		testValidWall(coords1, coords2) == (
-	  			if coords1(1) = coords2(1)
-	  				then(
-	  					if coords1(2)>coords2(2)
-	  						then(
-	  							if matrix(coords1(1))(coords1(2)-1) = 4
-	  								then(
-	  									return true
-	  								);
-	  						)
-	  						elseif matrix(coords1(1))(coords1(2)+1) = 4
-	  							then(
-	  								return true
-	  							);
-	  							return false
-	  				);
-	  			if coords1(2) = coords2(2)
-	  				then(
-	  					if coords1(1)>coords2(1)
-	  						then(
-	  							if matrix(coords1(1)-1)(coords1(2)) = 4
-	  								then(
-	  									return true
-	  								);
-	  						)
-	  						elseif matrix(coords1(1)+1)(coords1(2)) = 4
-	  							then(
-	  								return true
-	  							);
-	  							return false
-	  				);
-	  				
-	  				return false;	
-
-	  		);
-	  	
-	  	public testPathExistance1: (seq of int) ==> (bool) -- TODO start coords = player coords; Player1
+	  	public testPathExistance1: (seq of int) ==> () -- TODO start coords = player coords; Player1
 	  		testPathExistance1(coords) == (
 	  			if coords(1) = 17
-	  				then(
-	  					path1:=true;
-	  					return true
-	  					)
+	  				then
+	  					path1:=true
 	  			else
 	  				stck.push(coords);
 	  				if coords(1) + 2 < 18
@@ -158,16 +118,14 @@ operations
 	  					then
 	  						testPathExistance1([coords(1)-2, coords(2)]);
 	  				); 
-	  				return false;
+	  				
 	  		);
 	  	
-	  	public testPathExistance2: (seq of int) ==> (bool) -- TODO start coords = player coords; Player2
+	  	public testPathExistance2: (seq of int) ==> () -- TODO start coords = player coords; Player2
 	  		testPathExistance2(coords) == (
 	  			if coords(1) = 1
-	  				then(
-	  					path2:=true;
-	  					return true;
-	  					)
+	  				then
+	  					path2:=true
 	  			else
 	  				stck.push(coords);
 	  				if coords(1) - 2 > 0
@@ -194,7 +152,7 @@ operations
 	  					then
 	  						testPathExistance2([coords(1)+2, coords(2)])
 	  				);
-	  				return false;
+	  				
 	  		);
 	  	
 	  	public movePiece: String * nat==> ()
@@ -351,23 +309,10 @@ operations
 		  		return true;
 	  			);
 	  		 
-	  		 
-	  	public checkGameOver: () ==> nat
-	  		checkGameOver() == (
-	  			if(piece1coords(1) = 17)
-	  			then
-	  				return 1  -- player1 Wins
-	  			elseif(piece2coords(1) = 1)
-	  			then
-	  				return 2  -- player2 Wins
-	  			else
-	  				return 3  -- ongoing Game
-	  		);
-	  		
 	  	public getMatrix: () ==> seq of seq of nat
 	  		getMatrix() == (
 	  		return matrix;
 	  		);
 	  		
 	  		
-end Board
+end oldBoard
