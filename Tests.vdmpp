@@ -45,6 +45,38 @@ public testBadMatrix : () ==> ()
 		b.movePiece("U",1);
 	);
 	
+	public invalidWallPlacement : () ==> ()
+	invalidWallPlacement() == (
+		dcl b: Board := new Board();
+		b.placeWall([1,2],[1,4]);
+	);
+	
+	public emptyWallStack : () ==> ()
+	emptyWallStack() == (
+		dcl b: Board := new Board();
+		dcl p1: Player := new Player(0);
+		dcl p2: Player := new Player(0);
+		dcl game: Game := new Game(p1, p2);
+		game.placeWall([1,2],[3,2]);
+	);
+	
+	public invalidPieceMovementAfterGameEnd : () ==> ()
+		invalidPieceMovementAfterGameEnd() == (
+			dcl b: Board := new Board();
+			dcl p1: Player := new Player();
+			dcl p2: Player := new Player();
+			dcl game: Game := new Game(p1, p2);
+			game.setGameState(1);
+			game.movePiece("N");
+		);
+	
+	public removeFromStack : () ==> ()
+		removeFromStack() == (
+			dcl p: Player := new Player();
+			p.RemoveFromStack();
+			assertEqual(9, p.GetNumberOfWallsOnStack());
+		);
+	
 	public validMovement : () ==> ()
 	validMovement() == (
 	dcl b: Board := new Board();
@@ -56,8 +88,11 @@ public testBadMatrix : () ==> ()
   testAll() == (
  	  invalidDirectionMoving();
   	testBadMatrix();
+  	invalidPieceMovementAfterGameEnd();
+  	emptyWallStack();
   	-- Tests that intentionally break;
   	
+  	removeFromStack();
   	validMovement();
   	testGoodMatrix();
   );

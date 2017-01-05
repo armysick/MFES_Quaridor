@@ -26,6 +26,14 @@ operations
   	)
   pre len playerName > 0;
   
+  public Player : nat ==> Player
+  	Player (nrWalls) == (
+  		name := "NotSpecified";
+  		numberofwallsonstack := nrWalls;
+  		
+  		return self
+  	);
+  
   -- returns the player's name
   public GetName : () ==> String
   	GetName () == (

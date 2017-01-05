@@ -76,7 +76,11 @@ public Game: Player * Player ==> Game
 				getGameState() == (
 					return gameState;
 				);
-	
+				
+		public setGameState : nat ==> ()
+			setGameState(state) == (
+				gameState := state;
+			);
 
 functions
 -- TODO Define functiones here
