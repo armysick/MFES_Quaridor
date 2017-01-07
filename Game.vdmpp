@@ -54,15 +54,17 @@ public Game: Player * Player ==> Game
 		pure public hasWallsToUse : () ==> bool
 			hasWallsToUse() == (
 				if p1turn
-				then
+				then(
 					if player1.GetNumberOfWallsOnStack() > 0
 					then(
 						return true;
 					)
+				)
 				else
 					if player2.GetNumberOfWallsOnStack() > 0
-					then
+					then(
 						return true;
+						);
 				return false;
 			);
 		

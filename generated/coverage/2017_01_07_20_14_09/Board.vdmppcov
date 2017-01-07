@@ -10,7 +10,7 @@ instance variables
 	private stck: Stack;
 	private path1: bool;
 	private path2: bool;
-	private ignore: bool;	 
+	private temp: ?;
 	 
 	 
 	 inv exists1 line in seq matrix & exists1 elem in seq line & elem = 1; -- Only one "1" player1 piece
@@ -29,8 +29,8 @@ operations
 	  	Board () == (
 	  	matrix := 
 	    [
-	    [0,2,0,2,0,2,0,3,1,2,0,2,0,2,0,2,0],
-	    [2,4,2,4,2,4,2,4,3,4,3,4,2,4,2,4,2],
+	    [0,2,0,2,0,2,0,2,1,2,0,2,0,2,0,2,0],
+	    [2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
 	    [0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
 	    [2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
 	  	[0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
@@ -50,6 +50,7 @@ operations
 	  	
 	  	piece1coords := [1,9];
 	  	piece2coords := [17,9];
+	  	temp:= false;
 	  	);
 	  	
 	  	public Board: seq of seq of nat ==> Board
@@ -66,10 +67,10 @@ operations
 	  		matrix(coords2(1))(coords2(2)) := 3; 
 	  		path1:=false;
 	  		stck := new Stack(10000);
-	  		ignore := testPathExistance1(piece1coords);
+	  		temp:= testPathExistance1(piece1coords);
 	  		path2:=false;
 	  		stck := new Stack(10000);
-	  		ignore := testPathExistance2(piece2coords);
+	  		temp := testPathExistance2(piece2coords);
 	  		)
 	  		pre coords1(1)>0 and coords1(2)> 0 and coords1(1)<= 17 and coords1(2)<=17
 	  		and coords2(1)>0 and coords2(2)> 0 and coords2(1)<= 17 and coords2(2)<=17
@@ -125,12 +126,13 @@ operations
 
 	  		);
 	  	
-	  	public testPathExistance1: (seq of int) ==> (bool) -- TODO start coords = player coords; Player1
+	  	public testPathExistance1: (seq of int) ==> ? -- start coords = player coords; Player1
 	  		testPathExistance1(coords) == (
+	  		temp:= false;
 	  			if coords(1) = 17
 	  				then(
 	  					path1:=true;
-	  					return true
+	  					return true;
 	  					)
 	  			else
 	  				stck.push(coords);
@@ -158,10 +160,10 @@ operations
 	  					then
 	  						testPathExistance1([coords(1)-2, coords(2)]);
 	  				); 
-	  				return false;
+	  				
 	  		);
 	  	
-	  	public testPathExistance2: (seq of int) ==> (bool) -- TODO start coords = player coords; Player2
+	  	public testPathExistance2: (seq of int) ==> ? -- start coords = player coords; Player2
 	  		testPathExistance2(coords) == (
 	  			if coords(1) = 1
 	  				then(
@@ -194,7 +196,6 @@ operations
 	  					then
 	  						testPathExistance2([coords(1)+2, coords(2)])
 	  				);
-	  				return false;
 	  		);
 	  	
 	  	public movePiece: String * nat==> ()
@@ -236,36 +237,35 @@ operations
 		  				then
 		  					(
 		  						matrix(piece2coords(1))(piece2coords(2)) := 0;
-		  						matrix(piece2coords(1) - 2)(piece2coords(2)) := 1;
+		  						matrix(piece2coords(1) - 2)(piece2coords(2)) := 5;
 		  						piece2coords(1) := piece2coords(1) - 2;
 		  					)
 		  			elseif direction = "O"
 		  					then
 		  					(
 		  						matrix(piece2coords(1))(piece2coords(2)) := 0;
-		  						matrix(piece2coords(1))(piece2coords(2)-2) := 1;
+		  						matrix(piece2coords(1))(piece2coords(2)-2) := 5;
 		  						piece2coords(2) := piece2coords(2) - 2;
 		  					)
 		  			elseif direction = "S"
 		  					then
 		  					(
 		  						matrix(piece2coords(1))(piece2coords(2)) := 0;
-		  						matrix(piece2coords(1) +2)(piece2coords(2)) := 1;
+		  						matrix(piece2coords(1) +2)(piece2coords(2)) := 5;
 		  						piece2coords(1) := piece2coords(1) + 2;
 		  					)
 		  			elseif direction = "E"
 		  					then
 		  					(
 		  						matrix(piece2coords(1))(piece2coords(2)) := 0;
-		  						matrix(piece2coords(1))(piece2coords(2)+2) := 1;
+		  						matrix(piece2coords(1))(piece2coords(2)+2) := 5;
 		  						piece2coords(2) := piece2coords(2) + 2;
 		  					)
 		  		)
 	  		)
 	  		pre (direction = "N" or direction = "O" or direction= "S" or direction = "E") -- North, Oeste, etc
-	  		and checkPlayerOOB(direction,nrjogador) -- Jogador não sai do tabuleiro
-	  		and (nrjogador = 1 or nrjogador = 2) --Identificador válido de jogador
-	  		;-- TODO post testPathExistance(); 
+	  		and checkPlayerOOB(direction,nrjogador) -- Jogador não sai do tabuleiro e não tem obstaculo naquela direçao
+	  		and (nrjogador = 1 or nrjogador = 2); --Identificador válido de jogador
 	  		 
 	  		
 	  		pure public checkPlayerOOB: String * nat ==> bool
@@ -275,7 +275,7 @@ operations
 		  			if direction = "N"
 		  				then
 		  					(
-		  					if piece1coords(1) - 2 < 0
+		  					if piece1coords(1) - 2 < 0 or matrix(piece1coords(1)-1)(piece1coords(2)) = 3
 		  						then(
 		  							return false;
 		  							)
@@ -284,7 +284,7 @@ operations
 		  			elseif direction = "O"
 		  					then
 		  					(
-		  						if piece1coords(2)-2 < 0
+		  						if piece1coords(2)-2 < 0 or matrix(piece1coords(1))(piece1coords(2)-1) = 3
 		  							then(
 		  								return false;
 		  							)
@@ -292,7 +292,7 @@ operations
 		  			elseif direction = "S"
 		  					then
 		  					(
-			  					if piece1coords(1)+2 > 17
+			  					if piece1coords(1)+2 > 17 or matrix(piece1coords(1)+1)(piece1coords(2)) = 3
 			  							then(
 			  								return false;
 			  							)
@@ -301,7 +301,7 @@ operations
 		  			elseif direction = "E"
 		  					then
 		  					(
-		  						if piece1coords(2)+2 > 17
+		  						if piece1coords(2)+2 > 17 or matrix(piece1coords(1))(piece1coords(2)+1) = 3
 		  							then(
 		  								return false;
 		  							)
@@ -315,7 +315,7 @@ operations
 		  			if direction = "N"
 		  				then
 		  					(
-		  					if piece2coords(1) - 2 < 0
+		  					if piece2coords(1) - 2 < 0 or matrix(piece2coords(1)-1)(piece2coords(2)) = 3
 		  						then(
 		  							return false;
 		  							)
@@ -324,7 +324,7 @@ operations
 		  			elseif direction = "O"
 		  					then
 		  					(
-		  						if piece2coords(2)-2 < 0
+		  						if piece2coords(2)-2 < 0 or matrix(piece2coords(1))(piece2coords(2)-1) = 3
 		  							then(
 		  								return false;
 		  							)
@@ -332,13 +332,13 @@ operations
 		  			elseif direction = "S"
 		  					then
 		  					(
-			  					if piece2coords(1)+2 > 17
+			  					if piece2coords(1)+2 > 17 or matrix(piece2coords(1)+1)(piece2coords(2)) = 3
 			  							then(
 			  								return false;
 			  							)
 
 		  					)
-		  			elseif direction = "E"
+		  			elseif direction = "E" or matrix(piece2coords(1))(piece2coords(2)+1) = 3
 		  					then
 		  					(
 		  						if piece2coords(2)+2 > 17

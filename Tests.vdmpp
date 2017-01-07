@@ -84,7 +84,16 @@ public testBadMatrix : () ==> ()
 	dcl p2: Player := new Player(0);
 	dcl game: Game := new Game(p1, p2);
 	game.movePiece("S");
-	assertEqual(game.getBoard().getMatrix()(3)(9), 1);
+	game.movePiece("N");
+	game.movePiece("O");
+	game.movePiece("E");
+	game.movePiece("N");
+	game.movePiece("S");
+	game.movePiece("E");
+	game.movePiece("O");
+	
+	assertEqual(game.getBoard().getMatrix()(1)(9), 1);
+	assertEqual(game.getBoard().getMatrix()(17)(9), 5)
 	);
 	
 	public validWallPlacement : () ==> ()
@@ -92,8 +101,35 @@ public testBadMatrix : () ==> ()
 			dcl p1: Player := new Player();
 			dcl p2: Player := new Player();
 			dcl game: Game := new Game(p1, p2);
+			dcl mat : seq of seq of nat := 
+	    [
+	    [0,2,0,2,0,3,0,2,1,2,0,2,0,2,0,2,0],
+	    [2,4,2,4,2,4,2,4,3,4,2,4,2,4,2,4,2],
+	    [0,2,0,3,0,3,0,3,0,2,0,2,0,2,0,2,0],
+	    [2,4,2,4,3,4,3,4,3,4,2,4,2,4,2,4,2],
+	  	[0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	  	[2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	  	[0,3,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	  	[2,4,3,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	  	[0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	  	[2,4,2,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	  	[0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	  	[2,4,3,4,2,4,2,4,2,4,2,4,2,4,2,4,2],
+	  	[0,3,0,3,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	  	[2,4,2,4,2,4,3,4,2,4,2,4,2,4,2,4,2],
+	  	[0,3,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0],
+	  	[2,4,2,4,3,4,3,4,3,4,2,4,2,4,2,4,2],
+	  	[0,2,0,2,0,2,0,2,5,2,0,2,0,2,0,2,0]
+	  	];
+	  	dcl b : Board := new Board(mat);
+	  	
 			game.placeWall([1,2],[3,2]);
 			assertEqual(game.getBoard().getMatrix()(1)(2), 3);
+			game.placeWall([6,1],[6,3]);
+			assertEqual(game.getBoard().getMatrix()(6)(1), 3);
+			
+			b.placeWall([6,1],[6,3]);
+			
 		);
 	
 	public testAll: () ==> ()
