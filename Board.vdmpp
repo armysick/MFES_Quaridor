@@ -10,7 +10,7 @@ instance variables
 	private stck: Stack;
 	private path1: bool;
 	private path2: bool;
-	private ignore: bool;	 
+	private temp: ?;
 	 
 	 
 	 inv exists1 line in seq matrix & exists1 elem in seq line & elem = 1; -- Only one "1" player1 piece
@@ -50,6 +50,7 @@ operations
 	  	
 	  	piece1coords := [1,9];
 	  	piece2coords := [17,9];
+	  	temp:= false;
 	  	);
 	  	
 	  	public Board: seq of seq of nat ==> Board
@@ -66,10 +67,10 @@ operations
 	  		matrix(coords2(1))(coords2(2)) := 3; 
 	  		path1:=false;
 	  		stck := new Stack(10000);
-	  		ignore := testPathExistance1(piece1coords);
+	  		temp:= testPathExistance1(piece1coords);
 	  		path2:=false;
 	  		stck := new Stack(10000);
-	  		ignore := testPathExistance2(piece2coords);
+	  		temp := testPathExistance2(piece2coords);
 	  		)
 	  		pre coords1(1)>0 and coords1(2)> 0 and coords1(1)<= 17 and coords1(2)<=17
 	  		and coords2(1)>0 and coords2(2)> 0 and coords2(1)<= 17 and coords2(2)<=17
@@ -125,12 +126,13 @@ operations
 
 	  		);
 	  	
-	  	public testPathExistance1: (seq of int) ==> (bool) -- TODO start coords = player coords; Player1
+	  	public testPathExistance1: (seq of int) ==> ? -- start coords = player coords; Player1
 	  		testPathExistance1(coords) == (
+	  		temp:= false;
 	  			if coords(1) = 17
 	  				then(
 	  					path1:=true;
-	  					return true
+	  					return true;
 	  					)
 	  			else
 	  				stck.push(coords);
@@ -158,10 +160,10 @@ operations
 	  					then
 	  						testPathExistance1([coords(1)-2, coords(2)]);
 	  				); 
-	  				return false;
+	  				
 	  		);
 	  	
-	  	public testPathExistance2: (seq of int) ==> (bool) -- TODO start coords = player coords; Player2
+	  	public testPathExistance2: (seq of int) ==> ? -- start coords = player coords; Player2
 	  		testPathExistance2(coords) == (
 	  			if coords(1) = 1
 	  				then(
@@ -194,7 +196,6 @@ operations
 	  					then
 	  						testPathExistance2([coords(1)+2, coords(2)])
 	  				);
-	  				return false;
 	  		);
 	  	
 	  	public movePiece: String * nat==> ()
